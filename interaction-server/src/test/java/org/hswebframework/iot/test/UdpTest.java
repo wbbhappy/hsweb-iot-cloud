@@ -1,11 +1,9 @@
 package org.hswebframework.iot.test;
 
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.SneakyThrows;
 import org.hswebframework.web.Maps;
-
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
@@ -16,12 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * @author zhouhao
- * @since 1.1.0
- */
 public class UdpTest {
-
     @SneakyThrows
     public static void main(String[] args) {
         DatagramChannel channel = DatagramChannel.open(StandardProtocolFamily.INET);
@@ -34,16 +27,12 @@ public class UdpTest {
                 .put("username", "test")
                 .put("password", "test")
                 .get());
-
         channel.send(ByteBuffer.wrap(JSON.toJSONBytes(data)), server);
-
         int bufferLength = 1024;
         ByteBuffer buffer = ByteBuffer.allocate(bufferLength);
-
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         AtomicLong pingCounter = new AtomicLong();
         AtomicLong pongCounter = new AtomicLong();
-
         executorService.scheduleWithFixedDelay(() -> {
             try {
                 pingCounter.addAndGet(1);
@@ -52,7 +41,6 @@ public class UdpTest {
                 e.printStackTrace();
             }
         }, 2, 5, TimeUnit.SECONDS);
-
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 System.out.println("ping count:" + pingCounter.get() + " pong count:" + pongCounter.get());
@@ -70,6 +58,5 @@ public class UdpTest {
             }
             System.out.println(result);
         }
-
     }
 }

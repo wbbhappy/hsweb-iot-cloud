@@ -6,10 +6,6 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @SpringCloudApplication
 @EnableZuulProxy
 @EnableHystrix

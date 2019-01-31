@@ -14,16 +14,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
-
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 @Configuration
 @EnableAsync
 public class TaskConfiguration {
@@ -38,14 +33,10 @@ public class TaskConfiguration {
     @Bean
     public AsyncConfigurer asyncConfigurer() {
         AsyncUncaughtExceptionHandler handler = new SimpleAsyncUncaughtExceptionHandler();
-
         return new AsyncConfigurer() {
-            @Override
             public Executor getAsyncExecutor() {
                 return threadPoolTaskExecutor().getObject();
             }
-
-            @Override
             public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
                 return handler;
             }
@@ -56,12 +47,9 @@ public class TaskConfiguration {
     @ConfigurationProperties(prefix = "iot.executor")
     public ThreadPoolExecutorFactoryBean threadPoolTaskExecutor() {
         ThreadPoolExecutorFactoryBean executor = new ThreadPoolExecutorFactoryBean() {
-            @Override
             protected ThreadPoolExecutor createExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, BlockingQueue<Runnable> queue, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
-
                 return new ThreadPoolExecutor(corePoolSize, maxPoolSize,
                         keepAliveSeconds, TimeUnit.SECONDS, queue, threadFactory, rejectedExecutionHandler) {
-                    @Override
                     public void execute(Runnable command) {
                         Map<String, Object> objectMap = ThreadLocalUtils.getAll()
                                 .entrySet()
@@ -98,7 +86,6 @@ public class TaskConfiguration {
     class SharedThreadLocalThreadFactory implements ThreadFactory {
         AtomicInteger index = new AtomicInteger(1);
 
-        @Override
         public Thread newThread(Runnable runnable) {
             Thread thread = new Thread(runnable);
             thread.setName("iot-cloud-thread-" + index.getAndAdd(1));

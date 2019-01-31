@@ -13,29 +13,20 @@ import org.hswebframework.web.entity.authorization.UserEntity;
 import org.hswebframework.web.service.authorization.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
-
 /**
  * 服务间调用的认证方式,使用basic进行认证
- *
- * @author zhouhao
- * @since 1.0
  */
 @Slf4j
 @Component
 public class MicroServiceTokenParser implements UserTokenForTypeParser {
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private UserTokenManager userTokenManager;
 
-    @Override
     public ParsedToken parseToken(HttpServletRequest request) {
         ThreadLocalUtils.put("request-id",request.getHeader("request-id"));
-
         String authorization = request.getHeader("Authorization");
         if (authorization == null) {
             return null;
@@ -52,12 +43,9 @@ public class MicroServiceTokenParser implements UserTokenForTypeParser {
             if (token != null && !token.isExpired()) {
                 userTokenManager.changeTokenState(token.getToken(), TokenState.normal);
                 return new ParsedToken() {
-                    @Override
                     public String getToken() {
                         return usernameAndPassword;
                     }
-
-                    @Override
                     public String getType() {
                         return getTokenType();
                     }
@@ -68,22 +56,15 @@ public class MicroServiceTokenParser implements UserTokenForTypeParser {
                 UserEntity user = userService.selectByUserNameAndPassword(arr[0], arr[1]);
                 if (user != null) {
                     return new AuthorizedToken() {
-                        @Override
                         public String getUserId() {
                             return user.getId();
                         }
-
-                        @Override
                         public String getToken() {
                             return usernameAndPassword;
                         }
-
-                        @Override
                         public String getType() {
                             return getTokenType();
                         }
-
-                        @Override
                         public long getMaxInactiveInterval() {
                             //60分钟有效期
                             return 60 * 60 * 1000L;
@@ -94,13 +75,9 @@ public class MicroServiceTokenParser implements UserTokenForTypeParser {
         } catch (Exception e) {
             return null;
         }
-
         return null;
     }
-
-    @Override
     public String getTokenType() {
         return "iot-cloud-basic";
     }
-
 }

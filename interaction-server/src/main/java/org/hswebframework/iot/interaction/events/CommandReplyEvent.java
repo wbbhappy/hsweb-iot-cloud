@@ -5,10 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hswebframework.iot.interaction.vertx.client.message.ClientMessage;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 @Getter
 @Setter
 @ToString

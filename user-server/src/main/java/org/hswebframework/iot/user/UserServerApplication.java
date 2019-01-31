@@ -11,10 +11,6 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @SpringCloudApplication
 @Configuration
 @EnableAopAuthorize

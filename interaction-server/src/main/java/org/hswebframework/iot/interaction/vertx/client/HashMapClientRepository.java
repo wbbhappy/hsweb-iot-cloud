@@ -19,7 +19,6 @@ import org.hswebframework.web.concurrent.counter.CounterManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.Map;
@@ -30,10 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 @Component
 @Slf4j
 public class HashMapClientRepository implements ClientRepository, IotCommandSender {
@@ -53,10 +48,8 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @Override
     public Client getClient(String idOrClientId) {
         Client client = repository.get(idOrClientId);
-
         if (client != null) {
             //客户端太久没有ping
             if (System.currentTimeMillis() - client.lastPingTime() > timeout) {
@@ -75,10 +68,8 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
         if (!client.getClientId().equals(client.getId())) {
             repository.put(client.getId(), client);
         }
-
         //发布设备连接给spring事件
         eventPublisher.publishEvent(new DeviceConnectEvent(client.getClientId(), new Date()));
-
         if (vertx.isClustered()) {
             //集群下通过eventBus来接收从集群的其他节点发来的命令
             /*
@@ -113,13 +104,11 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
                         }
                     });
             consumerMap.put(client.getClientId(), consumer);
-
         }
         counter.add(1L);
         return client;
     }
 
-    @Override
     public Client register(Client client) {
         Client old = getClient(client.getClientId());
         if (null != old) {
@@ -129,7 +118,6 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
         } else {
             doRegister(client);
         }
-
         return old;
     }
 
@@ -140,7 +128,6 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
         counter = counterManager.getCounter("iot-device-client-counter");
     }
 
-    @Override
     public long total() {
         return counter.get();
     }
@@ -187,7 +174,6 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
         return old;
     }
 
-    @Override
     public Client unregister(String idOrClientId) {
         return doUnregister(idOrClientId, (success) -> {
         });
@@ -197,7 +183,6 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
         return "iot-command-".concat(clientId);
     }
 
-    @Override
     @SneakyThrows
     public void send(String topic, String clientId, IotCommand command) {
         command.tryValidate();

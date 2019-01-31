@@ -10,14 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * @author wangzheng
- * @see
- * @since 1.0
- */
 @RestControllerAdvice
 public class ServerExceptionHandler {
-
     @ExceptionHandler(DuplicateKeyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseMessage<Object> handleException(DuplicateKeyException e) {
@@ -30,7 +24,6 @@ public class ServerExceptionHandler {
             }
             tmp = tmp.getCause();
         }
-
         if (exception != null) {
             String message = exception.getMessage();
             String value = message.substring(17, message.indexOf(" for key") - 1);

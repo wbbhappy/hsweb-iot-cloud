@@ -2,14 +2,9 @@ package org.hswebframework.iot.user.config;
 
 import org.hswebframework.iot.user.controller.UserAuthorizeInfoController;
 import org.hswebframework.web.authorization.listener.event.AuthorizingHandleBeforeEvent;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @Component
 public class AuthorizingConfiguration {
     @EventListener

@@ -20,35 +20,23 @@ import org.hswebframework.iot.interaction.vertx.client.message.ClientMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author zhouhao
- * @see MqttServerVerticleSupplier
- * @since 1.0.0
- */
 @Slf4j
 //@Component //实例存在多个,不交给spring管理
 public class VertxMqttServer extends AbstractVerticle {
-
     @Autowired
     private ClientRepository clientRepository;
-
     @Value("${vertx.service-id}")
     private String serviceId;
-
     @Autowired
     private ApplicationEventPublisher eventPublisher;
-
     @Autowired
     private MqttServerOptions mqttServerOptions;
-
     @Autowired
     private DeviceAuthorityService authorityService;
 
-    @Override
     public void start() throws Exception {
         MqttServer mqttServer = MqttServer.create(vertx, mqttServerOptions);
         mqttServer.endpointHandler(mqttEndpoint -> {
@@ -56,7 +44,6 @@ public class VertxMqttServer extends AbstractVerticle {
             log.debug("接收到MQTT客户端[{}]消息", clientId);
             //执行创建链接
             doConnect(mqttEndpoint);
-
         }).listen(result -> {
             if (result.succeeded()) {
                 int port = mqttServer.actualPort();
@@ -74,7 +61,6 @@ public class VertxMqttServer extends AbstractVerticle {
         }
         String userName = endpoint.auth().userName();
         String passWord = endpoint.auth().password();
-
         if (authorityService.verification(endpoint.clientIdentifier(), userName, passWord)) {
             log.debug("MQTT客户端:{}认证通过", endpoint.clientIdentifier());
             acceptConnect(endpoint);
@@ -87,7 +73,6 @@ public class VertxMqttServer extends AbstractVerticle {
     protected void acceptConnect(MqttEndpoint endpoint) {
         String clientId = endpoint.clientIdentifier();
         MqttClient client = new MqttClient(endpoint);
-
         endpoint.accept(false)
                 .closeHandler(v -> {
                     log.debug("[{}] closed", clientId);
@@ -106,7 +91,6 @@ public class VertxMqttServer extends AbstractVerticle {
                     }
                     // ack the subscriptions request
                     endpoint.subscribeAcknowledge(subscribe.messageId(), grantedQosLevels);
-
                     // specifing handlers for handling QoS 1 and 2
                     endpoint.publishAcknowledgeHandler(messageId -> log.info("[{}] Received ack for message = {}", clientId, messageId))
                             .publishReceivedHandler(endpoint::publishRelease)
@@ -158,5 +142,4 @@ public class VertxMqttServer extends AbstractVerticle {
         //注册设备
         clientRepository.register(client);
     }
-
 }

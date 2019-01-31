@@ -10,13 +10,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Async;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @Slf4j
 public class StreamLoggingProducer {
-
     @Autowired(required = false)
     private LoggerProducer producer;
 
@@ -54,5 +49,4 @@ public class StreamLoggingProducer {
             log.error("send business logger error:\n{}", JSON.toJSONString(info), e);
         }
     }
-
 }

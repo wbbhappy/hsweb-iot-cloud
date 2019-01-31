@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,36 +14,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-
 import static java.lang.System.out;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 public class MQTTEmulatorApplication {
     private static AtomicLong connectCounter      = new AtomicLong();
     private static AtomicLong connectErrorCounter = new AtomicLong();
-
     private static AtomicLong commandCounter = new AtomicLong();
-
     private static AtomicLong reportCounter      = new AtomicLong();
     private static AtomicLong reportErrorCounter = new AtomicLong();
-
     private static AtomicLong replyCounter      = new AtomicLong();
     private static AtomicLong replyErrorCounter = new AtomicLong();
 
-
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-
     private final static Queue<Runnable> runnerQueue = new LinkedBlockingDeque<>();
-
     private static List<MqttClient> clients;
-
     private static Map<String, String> argsMap;
-
     private static List<JSONObject> reportData;
-
     private static Map<String, List<JSONObject>> replyData;
 
     @SuppressWarnings("all")
@@ -57,18 +42,14 @@ public class MQTTEmulatorApplication {
         String[] servers = argsMap
                 .computeIfAbsent("servers", key -> "tcp://127.0.0.1:1883")
                 .split("[,]");
-
         String clientsFile = argsMap.computeIfAbsent("clients", key -> "./data/clients.txt");
-
         if (new File("./data/report.json").exists()) {
             String report = Files.readAllLines(Paths.get("./data/report.json"))
                     .stream()
                     .reduce((s1, s2) -> String.join("\n", s1, s2))
                     .orElse("[]");
-
             reportData = (List) JSON.parseArray(report);
         }
-
         if (new File("./data/reply.json").exists()) {
             String reply = Files.readAllLines(Paths.get("./data/reply.json"))
                     .stream()
@@ -76,22 +57,17 @@ public class MQTTEmulatorApplication {
                     .orElse("{}");
             replyData = (Map) JSON.parseObject(reply);
         }
-
         int skip = Integer.parseInt(argsMap.computeIfAbsent("skip", key -> "0"));
-
         int limit = Integer.parseInt(argsMap.computeIfAbsent("limit", key -> String.valueOf(Integer.MAX_VALUE)));
         boolean disableReport = Boolean.parseBoolean(argsMap.computeIfAbsent("disableReport", key -> "false"));
         Boolean.parseBoolean(argsMap.computeIfAbsent("autoReconnect", key -> "true"));
-
         out.println("使用配置:\n" + JSON.toJSONString(argsMap, SerializerFeature.PrettyFormat));
-
         Runtime.getRuntime().addShutdownHook(new Thread(MQTTEmulatorApplication::printResult));
         out.println("建立连接中....");
         List<String> allLine = Files.lines(Paths.get(clientsFile))
                 .skip(skip)
                 .limit(limit)
                 .collect(Collectors.toList());
-
         clients = allLine.parallelStream()
                 .map(line -> {
                     String[] np = line.split("[: \t]");
@@ -231,7 +207,6 @@ public class MQTTEmulatorApplication {
         }
     }
 
-
     private static String getCauseMessage(Throwable e) {
         Throwable tmp = e.getCause() == null ? e : e.getCause();
         Throwable error = tmp;
@@ -256,7 +231,6 @@ public class MQTTEmulatorApplication {
         options.setKeepAliveInterval(20);
         client.connect(options);
         client.setCallback(new MqttCallback() {
-            @Override
             public void connectionLost(Throwable cause) {
                 System.err.println("连接已断开[" + clientId + "]");
                 connectErrorCounter.incrementAndGet();
@@ -269,13 +243,9 @@ public class MQTTEmulatorApplication {
                     }
                 }
             }
-
-            @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
 
             }
-
-            @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
 
             }
@@ -297,10 +267,7 @@ public class MQTTEmulatorApplication {
 
     public static void printResult() {
         out.println("上报数据数量:" + reportCounter + "次,失败:" + reportErrorCounter);
-
         out.println("接收到指令次数:" + commandCounter + ",回复数据数量:" + replyCounter + "次,失败:" + replyErrorCounter);
-
         out.println("连接次数:" + connectCounter + "次,失败:" + connectErrorCounter);
-
     }
 }

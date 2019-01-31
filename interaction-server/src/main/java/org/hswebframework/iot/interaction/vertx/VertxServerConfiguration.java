@@ -15,7 +15,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +22,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
-
 @Slf4j
 @Configuration
 public class VertxServerConfiguration {
-
     @Bean
     @ConfigurationProperties(prefix = "vertx")
     public VertxOptions vertxOptions() {
@@ -54,7 +47,6 @@ public class VertxServerConfiguration {
     @SneakyThrows
     public Vertx vertx() {
         VertxOptions vertxOptions = vertxOptions();
-
         log.debug("init vertx : \n{}", vertxOptions);
         Vertx vertx;
         if (vertxOptions.isClustered()) {
@@ -97,17 +89,13 @@ public class VertxServerConfiguration {
     }
 
     public static class VerticleRegisterProcessor implements CommandLineRunner {
-
         @Autowired
         private VerticleFactory verticleFactory;
-
         @Autowired
         private List<VerticleSupplier> verticles;
-
         @Autowired
         private Vertx vertx;
 
-        @Override
         public void run(String... args) throws Exception {
             vertx.registerVerticleFactory(verticleFactory);
             for (VerticleSupplier suplier : verticles) {

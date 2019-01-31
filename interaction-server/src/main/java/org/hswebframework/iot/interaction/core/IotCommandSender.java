@@ -1,10 +1,6 @@
 package org.hswebframework.iot.interaction.core;
-
 /**
  * 命令发送器
- *
- * @author zhouhao
- * @since 1.0.0
  */
 public interface IotCommandSender {
     /**

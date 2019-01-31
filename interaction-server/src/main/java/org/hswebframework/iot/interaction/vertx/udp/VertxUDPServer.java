@@ -19,22 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 
-
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 @Slf4j
 public class VertxUDPServer extends AbstractVerticle {
-
     @Autowired
     public DeviceAuthorityService authorityService;
 
     private DatagramSocket socket;
-
     @Autowired
     private ClientRepository clientRepository;
-
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -44,11 +36,9 @@ public class VertxUDPServer extends AbstractVerticle {
     @Value("${vertx.udp.port:5010}")
     private int port = 5010;
 
-    @Override
     public void start() throws Exception {
         DatagramSocketOptions options = new DatagramSocketOptions();
         socket = vertx.createDatagramSocket(options);
-
         socket.listen(port, host, result -> {
             if (result.succeeded()) {
                 DatagramSocket datagramSocket = result.result();
@@ -58,7 +48,6 @@ public class VertxUDPServer extends AbstractVerticle {
                     SocketAddress sender = packetResult.sender();
                     //根据ip和port作为id
                     String id = sender.host() + ":" + sender.port();
-
                     log.info("接受到UDP客户端:[{}]发送的数据:{}", sender, data);
                     byte[] dataBytes = data.getBytes();
                     UDPMessage messageObject;
@@ -99,11 +88,9 @@ public class VertxUDPServer extends AbstractVerticle {
                             sendMessageCode(sender, MessageCode.UN_SUPPORT_TYPE);
                             break;
                     }
-
                     if (clientMessage != null) {
                         eventPublisher.publishEvent(clientMessage);
                     }
-
                 }).endHandler(end -> log.debug("end handle udp"));
             } else {
                 log.warn("UDP server start failed", result.cause());
@@ -122,14 +109,12 @@ public class VertxUDPServer extends AbstractVerticle {
             sendMessageCode(sender, MessageCode.NO_AUTH_PARAM);
             return;
         }
-
         if (authorityService.verification(clientId, username, password)) {
             clientRepository.register(new UDPClient(clientId, sender, socket));
             sendMessageCode(sender, MessageCode.SUCCESS, "register");
         } else {
             sendMessageCode(sender, MessageCode.AUTH_FAIL);
         }
-
     }
 
     protected void sendMessageCode(SocketAddress sender, MessageCode messageCode) {
@@ -149,5 +134,4 @@ public class VertxUDPServer extends AbstractVerticle {
             }
         });
     }
-
 }

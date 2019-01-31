@@ -26,29 +26,21 @@ import org.springframework.cache.transaction.TransactionAwareCacheManagerProxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @Configuration
 @ConfigurationProperties(prefix = "iot.redis.default")
 @ConditionalOnProperty(prefix = "iot.redis", name = "enable", havingValue = "true")
 public class RedisConfiguration {
-
     @Setter
     @Getter
     private String host = "redis://127.0.0.1:6379";
-
     @Getter
     @Setter
     private int database = 0;
-
     @Setter
     @Getter
     private String password;
@@ -90,12 +82,9 @@ public class RedisConfiguration {
         def.setClassLoader(this.getClass().getClassLoader());
         def.setForceSerializable(true);
         return new FstCodec(def) {
-            @Override
             public Decoder<Object> getMapKeyDecoder() {
                 return StringCodec.INSTANCE.getMapKeyDecoder();
             }
-
-            @Override
             public Encoder getMapKeyEncoder() {
                 return StringCodec.INSTANCE.getMapKeyEncoder();
             }
@@ -127,13 +116,10 @@ public class RedisConfiguration {
         ConcurrentMap<String, Set<String>> userRepo = client.getMap("hsweb-iot-cloud.user-token-user", codec);
 
         return new DefaultUserTokenManager(repo, userRepo) {
-            @Override
             protected Set<String> getUserToken(String userId) {
                 userRepo.computeIfAbsent(userId, u -> new HashSet<>());
                 return client.getSet("iot.user-token-" + userId, codec);
             }
-
-            @Override
             protected void syncToken(UserToken userToken) {
                 tokenStorage.put(userToken.getToken(), (SimpleUserToken) userToken);
             }

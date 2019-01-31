@@ -13,13 +13,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
 import java.util.function.Supplier;
-
 /**
  * 将设备上传的数据上报
- * @author zhouhao
- * @since 1.0.0
  */
 @Component
 @Slf4j
@@ -57,8 +53,6 @@ public class StreamDeviceCommandReplyDispatcher {
     @EventListener
     @Async
     public void handleCommandReport(DeviceReportEvent event) {
-
-
         handleSendException(event, () ->
                 resolver.resolveDestination("iot.device.report." + event.getAction())
                         .send(new GenericMessage<>(JSON.toJSONString(event)), sendTimeout));
@@ -78,6 +72,5 @@ public class StreamDeviceCommandReplyDispatcher {
         } else if (log.isDebugEnabled()) {
             log.debug("send event to spring cloud stream success,payload:\n{}", JSON.toJSONString(event));
         }
-
     }
 }

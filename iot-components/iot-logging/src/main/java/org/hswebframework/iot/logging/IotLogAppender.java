@@ -16,16 +16,12 @@ import java.util.StringJoiner;
 
 @Slf4j
 public class IotLogAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
-
     private static ApplicationEventPublisher publisher;
-
     static String appId = "default";
-
     static void setPublisher(ApplicationEventPublisher publisher) {
         IotLogAppender.publisher = publisher;
     }
 
-    @Override
     protected void append(ILoggingEvent event) {
         if (publisher == null) {
             return;
@@ -34,12 +30,10 @@ public class IotLogAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
         IThrowableProxy proxies = event.getThrowableProxy();
         String message = event.getFormattedMessage();
         String stack = null;
-
         if (null != proxies) {
             int commonFrames = proxies.getCommonFrames();
             StackTraceElementProxy[] stepArray = proxies.getStackTraceElementProxyArray();
             StringJoiner joiner = new StringJoiner("\n", message + "\n[", "]");
-
             StringBuilder stringBuilder = new StringBuilder();
             ThrowableProxyUtil.subjoinFirstLine(stringBuilder, proxies);
             joiner.add(stringBuilder);

@@ -9,7 +9,5 @@ import org.hswebframework.web.organizational.authorization.PersonnelAuthenticati
 @Setter
 public class UserAuthorizeInfo {
     private Authentication user;
-
     private PersonnelAuthentication personnel;
-
 }

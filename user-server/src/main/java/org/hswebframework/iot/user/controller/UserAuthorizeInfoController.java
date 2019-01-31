@@ -17,19 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @RestController
 @RequestMapping("/user/authentication")
 @Authorize(permission = "user-token")
 @Api(hidden = true)
 public class UserAuthorizeInfoController {
-
     @Autowired
     PersonnelAuthenticationManager authorizationManager;
-
     @Autowired
     UserTokenManager userTokenManager;
 
@@ -60,6 +54,4 @@ public class UserAuthorizeInfoController {
         info.setPersonnel(authorizationManager.getPersonnelAuthorizationByUserId(authentication.getUser().getId()));
         return ResponseMessage.ok(info);
     }
-
-
 }

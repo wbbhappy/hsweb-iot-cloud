@@ -22,22 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
-/**
- * @author zhouhao
- * @since 1.0
- */
 @RestController
 @RequestMapping("/user-lock")
 @Api(tags = "用户-解锁,锁定操作", hidden = true)
 public class UserLockController {
-
     @Autowired
     private UserTokenManager userTokenManager;
-
     @Autowired
     private UserSettingService userSettingService;
-
     @Autowired
     private UserService userService;
 
@@ -116,7 +108,6 @@ public class UserLockController {
     public static class UploadLockPasswordRequest {
         @NotBlank
         private String lockPassword;
-
         @NotBlank
         private String userPassword;
     }
@@ -126,5 +117,4 @@ public class UserLockController {
         @NotBlank
         private String lockPassword;
     }
-
 }

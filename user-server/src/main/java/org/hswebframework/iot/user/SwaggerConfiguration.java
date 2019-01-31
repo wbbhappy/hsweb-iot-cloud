@@ -13,22 +13,15 @@ import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {
-
     public List<Parameter> createParameters() {
         ParameterBuilder userToken = new ParameterBuilder()
                 .parameterType("header")
@@ -52,7 +45,6 @@ public class SwaggerConfiguration {
                 .build()
                 .globalOperationParameters(createParameters());
     }
-
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()

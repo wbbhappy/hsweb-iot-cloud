@@ -9,15 +9,10 @@ import org.hswebframework.web.controller.message.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 @RestController
 @RequestMapping("/device/command")
 @Slf4j
 public class DeviceCommandSendController {
-
     @Autowired
     private IotCommandSender commandSender;
 
@@ -30,5 +25,4 @@ public class DeviceCommandSendController {
         }
         return ResponseMessage.ok();
     }
-
 }

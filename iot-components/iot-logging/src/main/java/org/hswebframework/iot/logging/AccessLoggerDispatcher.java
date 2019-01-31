@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.InputStream;
@@ -23,17 +22,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.stream.Stream;
-
 /**
  * 访问日志转发
- *
- * @author zhouhao
- * @since 1.0
  */
 @Component
 @Slf4j
 public class AccessLoggerDispatcher {
-
     @Autowired
     public ApplicationEventPublisher publisher;
 

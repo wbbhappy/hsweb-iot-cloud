@@ -6,13 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * @author zhouhao
- * @since 1.0
- */
 @FeignClient(name = "user-server", configuration = MicroServiceAuthConfiguration.class)
 public interface UserAuthorizeInfoClient {
-
     @RequestMapping(value = "/user/authentication/detail",method = RequestMethod.GET)
     ResponseMessage<String> getDetail(@RequestParam("token") String token);
 }
